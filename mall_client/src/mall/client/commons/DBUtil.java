@@ -15,13 +15,12 @@ public class DBUtil {
 		return conn;
 	}
 	//2. db자원(conn, stmt, rs) 해제
-	public void close(Connection conn, PreparedStatement stmt, ResultSet rs) { // 뒤에서부터 차례대로
+	public void close(ResultSet rs, PreparedStatement stmt, Connection conn) { // 뒤에서부터 차례대로
 		try {
 			rs.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		
+		}	
 		try {
 			stmt.close();
 		} catch (Exception e) {
