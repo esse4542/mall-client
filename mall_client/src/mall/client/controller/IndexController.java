@@ -1,4 +1,5 @@
-package mall.client.commons;
+
+package mall.client.controller;
 
 import java.io.IOException;
 
@@ -15,6 +16,7 @@ public class IndexController extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/view/index.jsp");
+		rd.forward(request, response);
 	}
 
 }
