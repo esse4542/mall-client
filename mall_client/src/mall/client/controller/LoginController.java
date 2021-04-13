@@ -18,8 +18,8 @@ public class LoginController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// 로그인 유효성 검사
 		HttpSession session = request.getSession();
-		if(session.getAttribute("loginClient") == null) {
-			response.sendRedirect(request.getContextPath()+"IndexController");
+		if(session.getAttribute("loginClient") != null) {
+			response.sendRedirect(request.getContextPath()+"/IndexController");
 			return;
 		}
 		// 

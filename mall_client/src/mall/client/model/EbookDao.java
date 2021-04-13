@@ -10,16 +10,16 @@ import mall.client.commons.DBUtil;
 import mall.client.vo.Ebook;
 
 public class EbookDao {
-	private DBUtil dbutil;
+	private DBUtil dbUtil;
 	
 	public List<Ebook> selectEbookListByPage(int beginRow, int rowPerPage){
 		List<Ebook> list = new ArrayList<Ebook>();
-		this.dbutil = new DBUtil();
+		this.dbUtil = new DBUtil();
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
-			conn = this.dbutil.getConnection();
+			conn = this.dbUtil.getConnection();
 			String sql = "SELECT ebook_title ebookTitle, ebook_price ebookPrice FROM ebook ORDER BY ebook_date DESC LIMIT ?, ?";
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, beginRow);
@@ -34,7 +34,7 @@ public class EbookDao {
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
-			this.dbutil.close(rs, stmt, conn);
+			this.dbUtil.close(rs, stmt, conn);
 		}
 		return list;
 	}

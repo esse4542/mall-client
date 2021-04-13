@@ -4,24 +4,26 @@
 <%
 	if(session.getAttribute("loginClient") == null) {
 %>
-		<!-- 로그아웃 -->
+		<!-- 비로그인 일때 -->
 		<div>
-			<form action="<%=request.getContextPath()%>/LoginCotroller" method="post">
-				ID : <input type="text" name="clientMail">
-				PW : <input type="password" name="clientPw">
+			<form action="<%=request.getContextPath()%>/LoginController" method="post">
+				ID : <input type="text" name="clientMail" value="tdonlonhg@live.com">
+				PW : <input type="password" name="clientPw" value="1234">
 				<button type="submit">로그인</button>
 			</form>
 		</div>
 <%		
 	} else {
 %>
-		<!-- 로그인-->
+		<!-- 로그인 되었을 때-->
 		<div>
 			<div>
-				<%=((Client)(session.getAttribute("loginClient"))).getClientMail() %>
+				<%=((Client)(session.getAttribute("loginClient"))).getClientMail() %>님 반갑습니다.
 			</div>
 			<ul>
-				<li><a href="<%=request.getContextPath()%>/LogoutCotroller">로그아웃</a></li>
+				<li><a href="<%=request.getContextPath()%>/IndexController">홈</a></li>
+				<li><a href="<%=request.getContextPath()%>/LogoutController">로그아웃</a></li>
+				<li><a href="<%=request.getContextPath()%>/CartListCotroller">장바구니</a></li>
 			</ul>
 		</div>
 <%	
