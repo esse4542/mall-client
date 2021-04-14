@@ -10,6 +10,10 @@ import mall.client.vo.Client;
 public class ClientDao { 
    private DBUtil dbUtil;
    
+   // 회원정보 매소드
+   
+   
+   
    // 회원가입, insert 매소드
 	public int insertClient(Client client) {
 
