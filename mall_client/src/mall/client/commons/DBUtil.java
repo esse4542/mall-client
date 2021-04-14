@@ -3,7 +3,7 @@ package mall.client.commons;
 import java.sql.*;
 
 public class DBUtil {
-	// 1. db¿¬°á
+	// 1. dbï¿½ï¿½ï¿½ï¿½
 	public Connection getConnection() {
 		Connection conn = null;
 		try {
@@ -14,23 +14,28 @@ public class DBUtil {
 		}
 		return conn;
 	}
-	//2. dbÀÚ¿ø(conn, stmt, rs) ÇØÁ¦
-	public void close(ResultSet rs, PreparedStatement stmt, Connection conn) { // µÚ¿¡¼­ºÎÅÍ Â÷·Ê´ë·Î
-		try {
-			rs.close();
-		} catch (Exception e) {
-			e.printStackTrace();
+	//2. dbï¿½Ú¿ï¿½(conn, stmt, rs) ï¿½ï¿½ï¿½ï¿½
+	public void close(ResultSet rs, PreparedStatement stmt, Connection conn) { // ï¿½Ú¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ê´ï¿½ï¿½
+		if(rs != null) {	
+			try {
+				rs.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}	
+		}
+		if(stmt != null) {
+			try {
+				stmt.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}	
-		try {
-			stmt.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		try {
-			conn.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		if(conn != null) {	
+			try {
+				conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}	
 	}
 }
