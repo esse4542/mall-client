@@ -28,7 +28,7 @@
 				<li><a href="<%=request.getContextPath()%>/IndexController">홈</a></li>
 				<li><a href="<%=request.getContextPath()%>/LogoutController">로그아웃</a></li>
 				<!-- ClientOneController - ClientDao.selectClientOne() - /view/client/clientOne.jsp -->
-				<li><a href="<%=request.getContextPath()%>/SelectOneClientController">회원정보</a></li>
+				<li><a href="<%=request.getContextPath()%>/ClientOneController">회원정보</a></li>
 				<li><a href="<%=request.getContextPath()%>/CartListCotroller">장바구니</a></li>
 			</ul>
 		</div>

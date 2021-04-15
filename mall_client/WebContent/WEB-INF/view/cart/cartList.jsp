@@ -14,6 +14,8 @@
 	<%
 		List<Map<String,Object>> cartList = (List<Map<String,Object>>)(request.getAttribute("cartList"));
 	%>
+	<h2>CartList</h2>
+	
 	<table border="1">
 		<thead>
 			<tr>
@@ -21,6 +23,8 @@
 				<td>ebookNo</td>
 				<td>ebookTitle</td>
 				<td>cartDate</td>
+				<td>삭제</td>
+				<td>주문</td>
 			</tr>
 		</thead>
 		<tbody>
@@ -33,6 +37,10 @@
 					<td><%=map.get("ebookNo")%></td>
 					<td><%=map.get("ebookTitle")%></td>
 					<td><%=map.get("cartDate")%></td>
+					<!-- DeleteCartController - CartDao.deleteCart() - redirect:/CartListController -->
+					<td><a href="">삭제</a></td>
+					<!-- InsertOrdersController - insertOrders(),deleteCart():ISSUE 트랜처리 - reidirect:/OrdersListController -->
+					<td><a href="">주문</a></td>
 				</tr>
 			<%			
 				}
