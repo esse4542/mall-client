@@ -40,6 +40,6 @@ public class DeleteCartController extends HttpServlet {
 		this.cartDao.deleteCart(cart);
 
 		// CartListController
-		response.sendRedirect(request.getContextPath()+"/CartListController");
+		response.sendRedirect(request.getContextPath()+"/CartListCotroller");
 	}	
 }

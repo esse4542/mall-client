@@ -48,7 +48,7 @@ public class CartDao {
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, cart.getClientMail());
 			stmt.setInt(2, cart.getEbookNo());
-			System.out.println("stmt : " + stmt); // 디버깅
+			System.out.println(stmt + "<-- stmt : cartDao.deleteCart "); // 디버깅
 			
 			stmt.executeUpdate();		
 		} catch (Exception e) { // 예외 처리
