@@ -41,13 +41,15 @@ public class InsertOrdersController extends HttpServlet {
 		orders.setClientNo(client.getClientNo());
 		
 		Cart cart = new Cart();
+		cart.setEbookNo(ebookNo);
 		cart.setClientMail(client.getClientMail());
-		
+	    cart.setCartNo(cart.getCartNo());
+
 		// dao
 		// insert 후 delete 되기전 db에 문제가 생기면 --> insert취소(롤백) --> 트랜잭션처리
 		ordersDao.insertOrders(orders);
-		cartDao.insertCart(cart);
-		
+		cartDao.deleteCart(cart);
+
 		
 		response.sendRedirect(request.getContextPath()+"/OrdersListController");
 	}
