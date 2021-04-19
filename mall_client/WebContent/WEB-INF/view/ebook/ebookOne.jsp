@@ -15,6 +15,12 @@
 	<%
 		// 형변환
 	    Ebook ebook = (Ebook)request.getAttribute("ebook");
+		int currentPage = (Integer)request.getAttribute("currentPage");
+		int rowPerPage = (Integer)request.getAttribute("rowPerPage");
+		
+		// 디버깅
+		System.out.println("currentPage : " + currentPage);
+		System.out.println("rowPerPage : " + rowPerPage);
 	%>
 	
 	<h2>책 정보</h2>
@@ -30,6 +36,14 @@
 	      <tr>
 	         <td>ebookTitle</td>
 	         <td><%=ebook.getEbookTitle() %></td>
+	      </tr>
+	      <tr>
+	         <td>ebookImg</td>
+	         <td><%=ebook.getEbookImg() %></td>
+	      </tr>
+	      <tr>
+	         <td>ebookPrice</td>
+	         <td><%=ebook.getEbookPrice() %></td>
 	      </tr>
 	      <tr>
 	      	<td>ebookState</td>
@@ -52,6 +66,6 @@
 			}
 		%>
 	</a>
-	<a href="<%=request.getContextPath()%>/IndexController?ebookNo=<%=ebook.getEbookNo()%>" class="btn">뒤로 가기</a>
+	<a href="<%=request.getContextPath()%>/IndexController?rowPerPage=<%=rowPerPage%>&currentPage=<%=currentPage%>">뒤로 가기</a>
 </body>
 </html> 

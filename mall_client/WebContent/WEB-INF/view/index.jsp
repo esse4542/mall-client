@@ -8,32 +8,22 @@
 <title>index</title>
 </head>
 <body>
-	<!-- 책 제목 검색, category -->
 	<%
-		int currentPage = (int)request.getAttribute("currentPage");
-		int lastPage = (int)request.getAttribute("lastPage");
-		
-		String categoryName = (String)request.getAttribute("categoryName");
-		String searchWord = null;
-		if(request.getAttribute("searchWord") != null) { // searchWord가 null이 아니면
-			searchWord = (String)request.getAttribute("searchWord");
-		}
-		
-		//카테고리 리스트
-		List<String> categoryList = (List<String>)(request.getAttribute("categoryList"));
-	%>
-			<a href="<%=request.getContextPath()%>/IndexController">전체</a>
-	<%
-		for(String cName: categoryList){
-	%>
-			<a href="<%=request.getContextPath()%>/IndexController?categoryName=<%=cName%>"><%=cName%></a>	
-	<%
-		} 
-		
-	%>	
-	
-	<%
+		// 수집
 		List<Ebook> ebookList = (List<Ebook>)(request.getAttribute("ebookList"));
+		List<String> categoryNameList = (List)(request.getAttribute("categoryNameList"));
+		List<Map<String, Object>> bestOrdersList = (List<Map<String, Object>>)(request.getAttribute("bestOrdersList"));
+		int currentPage = (Integer)request.getAttribute("currentPage");
+		int rowPerPage = (Integer)request.getAttribute("rowPerPage");
+		int totalRow = (Integer)request.getAttribute("totalRow");
+		String searchTitle = (String)request.getAttribute("searchTitle");
+		String categoryName = (String)request.getAttribute("categoryName");
+		// 디버깅
+		System.out.println("currentPage : " + currentPage);
+		System.out.println("rowPerPage : " + rowPerPage);
+		System.out.println("totalRow : " + totalRow);
+		System.out.println("searchTitle : " + searchTitle);
+		System.out.println("categoryName : " + categoryName);
 	%>
 	
 	<!-- 메뉴 -->
@@ -41,7 +31,67 @@
 	
 	<h1>index</h1>
 	
-	<table border="1">
+	<!-- 카테고리별 목록을 볼 수 있는 네비게이션 -->
+	<div>
+		<a href="<%=request.getContextPath()%>/IndexController?rowPerPage=<%=rowPerPage%>">전체</a>
+	<%
+			// 페이지당 행의 수, 값이 존재하면 그 값으로 초기화
+			for(String s : categoryNameList) {
+	%>
+		<a href="<%=request.getContextPath()%>/IndexController?categoryName=<%=s%>&rowPerPage=<%=rowPerPage%>&searchTitle=<%=searchTitle%>">[<%=s%>]</a>
+	
+	<%
+			}
+	%>
+	</div>
+	
+	<!-- 몇 페이지씩 보여줄 지 결정해주는 페이지 -->
+	<form action="<%=request.getContextPath()%>/IndexController" method="get">
+		<select name="rowPerPage">
+		<%
+			for(int i=10; i<31; i+=5){
+				if(rowPerPage == i){
+		%>
+					<option value="<%=i%>" selected="selected"><%=i%></option>
+		<%			
+				} else {
+		%>
+					<option value="<%=i%>"><%=i%></option>
+		<%			
+				}
+			}
+		%>
+		</select>
+		<button type="submit">보기</button>
+	</form>
+	
+	   <!-- best ebook 상품 5개 출력 -->
+   <h3>Best Ebook</h3>
+   <table border="1">
+      <tr>
+         <%
+            for(Map m : bestOrdersList) {
+         %>
+               <td>
+                  <div><img src="<%=request.getContextPath()%>/img/default.jpg"></div>
+                  <!-- EbookOneController - EbookDao.selectEbookOne() - ebookOne.jsp -->
+                  <!-- ebookNo 같이 넘겨줌 -->
+                  <div>
+                     <a href="<%=request.getContextPath()%>/EbookOneController?ebookNo=<%=m.get("ebookNo")%>">
+                        <%=m.get("ebookTitle")%>
+                     </a>
+                  </div>
+                  <div>￦<%=m.get("ebookPrice")%></div>
+               </td>   
+          <%
+            }
+          %>     
+      </tr>
+   </table>
+
+	
+	<!-- ebook상품 출력 -->
+ 	<table border="1">
 		<tr>
 			<%
 				int i = 0;
@@ -51,12 +101,9 @@
 					<td>
 						<div><img src="<%=request.getContextPath()%>/img/depart.jpg"></div>
 						<!-- EbookOneController - EbookDao.selectEbookOne() - ebookOne.jsp -->
-						<div>
-							<a href="<%=request.getContextPath()%>/EbookOneController?ebookNo=<%=ebook.getEbookNo()%>">
-								<%=ebook.getEbookTitle()%>
-							</a>
-						</div>
-						
+	
+	
+				<div><a href="<%=request.getContextPath()%>/EbookOneController?ebookNo=<%=ebook.getEbookNo()%>&currentPage=<%=currentPage%>&rowPerPage=<%=rowPerPage%>"><%=ebook.getEbookTitle()%></a></div>
 						<div>￦<%=ebook.getEbookPrice()%></div>
 					</td>
 			<%		
@@ -69,51 +116,31 @@
 			%>
 		</tr>
 	</table>
-<% 	
-	//검색 후 버튼이 안나옴!
-		if(currentPage > 1){
-			if(categoryName == null){
-				if(searchWord == null){
-					%>
-						<a href="<%=request.getContextPath()%>/IndexController?currentPage=<%=currentPage-1%>">이전</a>
-					<%
-				} else{
-				%>
-					<a href="<%=request.getContextPath()%>/SearchIndexController?currentPage=<%=currentPage-1%>&searchWord=<%=searchWord%>">이전</a>
-				<%		
-				}
-			} else{
-%>
-			<a href="<%=request.getContextPath()%>/IndexController?currentPage=<%=currentPage-1%>&categoryName=<%=categoryName%>">이전</a>
-<%
-			}
-		}
-
-		if(currentPage < lastPage){
-		if(categoryName == null){
-		if(searchWord == null){
-		%>
-			<a href="<%=request.getContextPath()%>/IndexController?currentPage=<%=currentPage+1%>">다음</a>
-		<%	
-		} else{
-	%>
-		<a href="<%=request.getContextPath()%>/SearchIndexController?currentPage=<%=currentPage+1%>&searchWord=<%=searchWord%>">다음</a>
-	<%	
-		}
-	}else{
-%>
-
-	<a href="<%=request.getContextPath()%>/IndexController?currentPage=<%=currentPage+1%>&categoryName=<%=categoryName%>">다음</a>
-	<%
-			}
-		}
-	%>
-	
-	<!-- 검색기능 넣기 -->	
-	<form action="<%=request.getContextPath()%>/SearchIndexController" method="post">
-		ebookTitle:
-		<input type="text" name="searchWord">
+	<form action="<%=request.getContextPath()%>/IndexController" method="get">
+		<input type="hidden" name="categoryName" value="<%=categoryName%>">
+		SearchTitle :
+		<input type="text" name="searchTitle">
 		<button type="submit">검색</button>
 	</form>
+	<%
+		if(currentPage > 1) {
+	%>
+			<a href="<%=request.getContextPath()%>/IndexController?currentPage=<%=currentPage-1%>&rowPerPage=<%=rowPerPage%>&searchTitle=<%=searchTitle%>"><button type="button">이전</button></a>
+	<%
+		}
+	 	// 마지막 페이지 초기화	
+		int lastPage = totalRow / rowPerPage;
+		// 나머지가 있으면 한 페이지 추가	
+		if(totalRow % rowPerPage != 0){ 
+			lastPage += 1;
+		}
+		System.out.println("lastPage : " + lastPage); // 디버깅
+						
+		if(currentPage < lastPage){
+	%>
+			<a href="<%=request.getContextPath()%>/IndexController?currentPage=<%=currentPage+1%>&rowPerPage=<%=rowPerPage%>&searchTitle=<%=searchTitle%>"><button type="button">다음</button></a>
+	<%
+       		}		
+	%>
 </body>
 </html>

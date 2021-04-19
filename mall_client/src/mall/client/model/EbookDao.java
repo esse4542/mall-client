@@ -12,6 +12,59 @@ import mall.client.vo.Ebook;
 public class EbookDao {
 	private DBUtil dbUtil;
 	
+	// 전체 행의 개수 구하는 메서드
+	public int totalCount(String searchTitle, String categoryName) {
+		// DBUtil, Connection, PreparedStatement, ResultSet, rowCnt 객체 생성 및 초기화
+		this.dbUtil = new DBUtil();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		int rowCnt = 0;
+
+		try {
+			// DB 연결 및 SQL문 실행
+			conn = this.dbUtil.getConnection();
+			String sql = "";
+
+			if(searchTitle.equals("") && categoryName.equals("")) {
+				sql = "SELECT count(*) cnt FROM ebook";
+				stmt = conn.prepareStatement(sql);
+			}
+			else if(searchTitle.equals("") && !categoryName.equals("")) {
+				sql = "SELECT count(*) cnt FROM ebook WHERE category_name like ?";
+				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, "%"+categoryName+"%");
+
+			}
+			else if(!searchTitle.equals("") && categoryName.equals("")) {
+				sql = "SELECT count(*) cnt FROM ebook WHERE ebook_title like ?";
+				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, "%"+searchTitle+"%");
+			}
+			else if(!searchTitle.equals("") && !categoryName.equals("")) {
+				sql = "SELECT count(*) cnt FROM ebook WHERE ebook_title like ? AND category_name like ?";
+				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, "%"+searchTitle+"%");
+				stmt.setString(2, "%"+categoryName+"%");
+			}
+
+			System.out.println("stmt(totalCount) : " + stmt); // 디버깅
+			rs = stmt.executeQuery();
+
+			while(rs.next()) {
+				rowCnt = rs.getInt("cnt");
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			this.dbUtil.close(rs, stmt, conn);
+		}
+		return rowCnt;
+	}
+		
+	
+	
+	
 	// ebookOne 매소드
 	public Ebook selectEbookOne(int ebookNo) {
 		this.dbUtil = new DBUtil();
@@ -51,7 +104,7 @@ public class EbookDao {
 	
 	
 	// 리스트
-	public List<Ebook> selectEbookListByPage(int beginRow, int rowPerPage){
+	public List<Ebook> selectEbookListByPage(int beginRow, int rowPerPage, String searchTitle, String categoryName) {
 		this.dbUtil = new DBUtil();
 		List<Ebook> list = new ArrayList<Ebook>();
 		Connection conn = null;
@@ -59,11 +112,36 @@ public class EbookDao {
 		ResultSet rs = null;
 		try {
 			conn = this.dbUtil.getConnection();
-			String sql = "SELECT ebook_no ebookNo, ebook_title ebookTitle, ebook_price ebookPrice FROM ebook ORDER BY ebook_date DESC LIMIT ?, ?";
-			stmt = conn.prepareStatement(sql);
-			stmt.setInt(1, beginRow);
-			stmt.setInt(2, rowPerPage);
+			String sql = "";
+			if(searchTitle.equals("") && categoryName.equals("")) {
+				sql = "SELECT ebook_no ebookNo, ebook_title ebookTitle, ebook_price ebookPrice FROM ebook ORDER BY ebook_date DESC LIMIT ?, ?";
+				stmt = conn.prepareStatement(sql);
+				stmt.setInt(1, beginRow);
+				stmt.setInt(2, rowPerPage);
+			} else if(searchTitle.equals("") && !categoryName.equals("")){
+				sql = "SELECT ebook_no ebookNo, ebook_title ebookTitle, ebook_price ebookPrice FROM ebook WHERE category_name like ? ORDER BY ebook_date DESC LIMIT ?, ?";
+				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, categoryName);
+				stmt.setInt(2, beginRow);
+				stmt.setInt(3, rowPerPage);
+			} else if(!searchTitle.equals("") && categoryName.equals("")) {
+				sql = "SELECT ebook_no ebookNo, ebook_title ebookTitle, ebook_price ebookPrice FROM ebook WHERE ebook_title like ? ORDER BY ebook_date DESC LIMIT ?, ?";
+				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, "%"+searchTitle+"%");
+				stmt.setInt(2, beginRow);
+				stmt.setInt(3, rowPerPage);
+			} else if(!searchTitle.equals("") && !categoryName.equals("")) {
+				sql = "SELECT ebook_no ebookNo, ebook_title ebookTitle, ebook_price ebookPrice FROM ebook WHERE ebook_title like ? AND category_name like ? ORDER BY ebook_date DESC LIMIT ?, ?";
+				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, "%"+searchTitle+"%");
+				stmt.setString(2, categoryName);
+				stmt.setInt(3, beginRow);
+				stmt.setInt(4, rowPerPage);
+			}
+
+			System.out.println("stmt : " + stmt); // 디버깅
 			rs = stmt.executeQuery();
+			
 			while(rs.next()) {
 				Ebook ebook = new Ebook();
 				ebook.setEbookNo(rs.getInt("ebooKNo"));
