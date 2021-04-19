@@ -4,13 +4,46 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import mall.client.commons.DBUtil;
 import mall.client.vo.Ebook;
 
 public class EbookDao {
 	private DBUtil dbUtil;
+	
+	//
+	public List<Map<String, Object>> selectEbookListByMonth(int year, int month) {
+		this.dbUtil = new DBUtil();
+		List<Map<String, Object>> list = new ArrayList<>();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			conn = this.dbUtil.getConnection();
+			String sql = "SELECT ebook_no ebookNo, ebook_title ebookTitle, DAY(ebook_date) d FROM ebook WHERE YEAR(ebook_date) = ? AND MONTH(ebook_date) = ?";
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, year);
+			stmt.setInt(2, month);
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				Map<String, Object> map = new HashMap<>();
+				map.put("ebookNo", rs.getInt("ebookNo"));
+				map.put("ebookTitle", rs.getString("ebookTitle"));
+				map.put("d", rs.getInt("d"));
+				list.add(map);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			this.dbUtil.close(rs, stmt, conn);
+		}
+		return list;
+	}
+	
+	
 	
 	// 전체 행의 개수 구하는 메서드
 	public int totalCount(String searchTitle, String categoryName) {
