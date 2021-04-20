@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,7 +10,7 @@
 	<jsp:include page="/WEB-INF/view/inc/mainMenu.jsp"></jsp:include>
 	
 	<h1>회원가입</h1>
-	<form method="post" action="<%=request.getContextPath()%>/InsertClientController"> <!-- post -->
+	<form method="post" action="${pageContext.request.contextPath}/InsertClientController"> <!-- post -->
 		<table border="1">
 			<tr>
 				<th>clientMail</th>

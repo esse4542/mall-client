@@ -30,11 +30,20 @@ public class LoginController extends HttpServlet {
 		client.setClientMail(clientMail);
 		client.setClientPw(clientPw);
 		
+		System.out.println(client.getClientMail());
+		System.out.println(client.getClientPw());
+		
 		this.clientDao = new ClientDao();
+		
 		Client returnClient = this.clientDao.login(client);
+		
+		System.out.println(returnClient.getClientMail());
+		System.out.println(returnClient.getClientNo());
+		
 		if(returnClient != null) {
 			session.setAttribute("loginClient", returnClient);
 		}
-		 response.sendRedirect(request.getContextPath()+"/IndexController");
+		
+		response.sendRedirect(request.getContextPath()+"/IndexController");
 	}
 }
