@@ -14,7 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 import mall.client.model.CategoryDao;
 import mall.client.model.EbookDao;
 import mall.client.model.OrdersDao;
+import mall.client.model.StatsDao;
 import mall.client.vo.Ebook;
+import mall.client.vo.Stats;
 
 // C -> M -> V
 @WebServlet("/IndexController")
@@ -22,9 +24,13 @@ public class IndexController extends HttpServlet {
 	private EbookDao ebookDao;
 	private CategoryDao categoryDao;
 	private OrdersDao ordersDao;
+	private StatsDao statsDao;
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// request
+		
+		System.out.println("/IndexController 시작...");
+		
 		int currentPage = 1; // 현페 페이지
 		if(request.getParameter("currentPage") != null) { // 현재페이지를 받아옴
 			currentPage = Integer.parseInt(request.getParameter("currentPage"));
@@ -62,6 +68,18 @@ public class IndexController extends HttpServlet {
 		System.out.println("totalRow : " + totalRow);
 		
 		
+		//접속자 관련 
+		this.statsDao= new StatsDao(); 
+		long total = this.statsDao.selectStatsTotal(); // 전체 접속자
+		Stats stats = this.statsDao.selectStatsByToday(); // today 접속자
+		long statsCount =0;
+		if(stats != null) {
+			statsCount = stats.getStatsCount();	
+		}
+		
+		//
+		request.setAttribute("total", total);
+		request.setAttribute("statsCount", statsCount);
 		request.setAttribute("bestOrdersList", bestOrdersList);
 		request.setAttribute("ebookList", ebookList);
 		request.setAttribute("categoryNameList", categoryNameList);

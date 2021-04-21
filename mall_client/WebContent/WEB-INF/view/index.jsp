@@ -10,8 +10,12 @@
 	<!-- 메뉴 -->
 	<jsp:include page="/WEB-INF/view/inc/mainMenu.jsp"></jsp:include>
 	
-	<h1>index</h1>
+	<div>
+		<div>오늘 접속자 수 : ${statsCount}</div>
+		<div>전체 접속자 수 : ${total}</div>
+	</div>
 	
+	<h1>index</h1>
 	<!-- 카테고리별 목록을 볼 수 있는 네비게이션 -->
 	<div>
 		<a href="${pageContext.request.contextPath}/IndexController?rowPerPage=${rowPerPage}">전체</a>
